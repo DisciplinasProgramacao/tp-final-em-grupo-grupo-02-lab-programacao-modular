@@ -1,4 +1,4 @@
-package src.ProgramaFidelidade;
+package ProgramaFidelidade;
 
 public class Branco implements IFidelidade{
     private final static double PORCENTAGEM_DESCONTO=1;

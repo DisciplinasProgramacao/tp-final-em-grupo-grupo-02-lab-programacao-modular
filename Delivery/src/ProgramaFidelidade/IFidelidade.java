@@ -1,4 +1,4 @@
-package src.ProgramaFidelidade;
+package ProgramaFidelidade;
 
 public interface IFidelidade {
     public double getDesconto();
