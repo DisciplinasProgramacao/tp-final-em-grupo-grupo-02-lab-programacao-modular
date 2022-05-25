@@ -7,4 +7,9 @@ public class Prata implements IFidelidade{
     public double getDesconto() {
         return PORCENTAGEM_DESCONTO;
     }
+
+    @Override
+    public String toString(){
+        return "Prata";
+    }
 }
