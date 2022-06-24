@@ -1,3 +1,4 @@
+import java.io.Serializable;
 import java.util.Date;
 import java.util.LinkedList;
 import java.util.concurrent.TimeUnit;
@@ -8,13 +9,15 @@ import ProgramaFidelidade.IFidelidade;
 import ProgramaFidelidade.Prata;
 import ProgramaFidelidade.Preto;
 
-public class Cliente {
+public class Cliente implements Serializable {
     private static int count = 1;
 
     private int id;
     private String nome;
     private String cpf;
     private IFidelidade fidelidade;
+
+    private LinkedList<Pedido> pedidos = new LinkedList<>();
 
     Cliente(String nome, String cpf) throws Exception {
         this.setId();
@@ -56,22 +59,12 @@ public class Cliente {
         return this.fidelidade.toString();
     }
 
-    private LinkedList<Pedido> getHistoricoCliente(LinkedList<Pedido> pedidos) {
-        LinkedList<Pedido> pedidosDoCliente = new LinkedList<>();
-        for (Pedido pedido : pedidos) {
-            if (pedido.getCliente() == this) {
-                pedidosDoCliente.add(pedido);
-            }
-        }
-        return pedidosDoCliente;
-    }
-
-    private double totalDosUltimosPedidosEmUmPeriodo(LinkedList<Pedido> list, int meses) {
+    private double totalDosUltimosPedidosEmUmPeriodo(int meses) {
         Date d = new Date();
         d.setTime(d.getTime() - TimeUnit.DAYS.toMillis(meses * 30));
 
         double total = 0;
-        for (Pedido pedido : list) {
+        for (Pedido pedido : this.pedidos) {
             if (pedido.getData().after(d)) {
                 total += pedido.getTotalPedido();
             }
@@ -79,13 +72,13 @@ public class Cliente {
         return total;
     }
 
-    public void setFidelidade(LinkedList<Pedido> pedidos) {
-        LinkedList<Pedido> pedidosDoCliente = getHistoricoCliente(pedidos);
-        if (pedidos.size() >= 50 || this.totalDosUltimosPedidosEmUmPeriodo(pedidosDoCliente, 6) >= 600) {
+    public void setFidelidade() {
+
+        if (this.pedidos.size() >= 50 || totalDosUltimosPedidosEmUmPeriodo(6) >= 600) {
             this.fidelidade = new FeV();
-        } else if (pedidos.size() >= 10 || this.totalDosUltimosPedidosEmUmPeriodo(pedidosDoCliente, 2) >= 250) {
+        } else if (this.pedidos.size() >= 10 || this.totalDosUltimosPedidosEmUmPeriodo(2) >= 250) {
             this.fidelidade = new Preto();
-        } else if (pedidos.size() >= 4 || this.totalDosUltimosPedidosEmUmPeriodo(pedidosDoCliente, 1) >= 100) {
+        } else if (this.pedidos.size() >= 4 || this.totalDosUltimosPedidosEmUmPeriodo(1) >= 100) {
             this.fidelidade = new Prata();
         } else {
             this.fidelidade = new Branco();
@@ -97,4 +90,16 @@ public class Cliente {
         return this.fidelidade.getDesconto();
     }
 
+    public LinkedList<Pedido> getPedidos() {
+        return this.pedidos;
+    }
+
+    public void addPedido(Pedido p) {
+        this.pedidos.add(p);
+    }
+
+    @Override
+    public String toString() {
+        return "ID: " + this.id + " - Nome: " + this.nome + " Fidelidade: " + this.fidelidade.toString();
+    }
 }

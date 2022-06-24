@@ -1,7 +1,0 @@
-1110;Pepperoni;4
-1120;Bacon;3
-1130;Palmito;3
-1140;Queijo
-1150;Picles;2
-1160;Ovo;2
-1170;Batata Palha;2

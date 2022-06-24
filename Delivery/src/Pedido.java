@@ -1,7 +1,7 @@
 import java.util.Date;
 import java.util.LinkedList;
 
-import Produto.Produtos;
+import Produto.Produto;
 
 public class Pedido {
     private static int count = 1;
@@ -9,15 +9,17 @@ public class Pedido {
     private int id;
     private Date data;
     private Cliente cliente;
-    private LinkedList<Produtos> itensPedido;
+    private LinkedList<Produto> itensPedido = new LinkedList<>();
 
-    Pedido(Cliente cliente, LinkedList<Produtos> itensPedido) {
+    double desconto;
+
+    Pedido(Cliente cliente, LinkedList<Produto> itensPedido, double desconto) {
         this.setId();
         this.cliente = cliente;
         this.data = new Date();
-        if (itensPedido.size() >= 1 && itensPedido.size() <= 10) {
-            this.itensPedido = itensPedido;
-        }
+        this.itensPedido.addAll(itensPedido);
+        this.desconto = desconto;
+
     }
 
     private void setId() {
@@ -37,14 +39,20 @@ public class Pedido {
         return this.cliente;
     }
 
-    public LinkedList<Produtos> getItensPedido() {
+    public LinkedList<Produto> getItensPedido() {
         return this.itensPedido;
     }
 
-    public double getTotalPedido(){
-        double total=0;
-        for (Produtos produtos : itensPedido) {
-            total+=produtos.getPrecoTotal();
+    public double getTotalPedido() {
+        double total = 0;
+        for (Produto produto : itensPedido) {
+            // TODO
+            try {
+                total += produto.getPrecoTotal();
+
+            } catch (Exception e) {
+                System.out.println(e);
+            }
         }
         return total;
     }
@@ -53,11 +61,12 @@ public class Pedido {
     public String toString() {
         StringBuilder s = new StringBuilder();
         s.append("ID: " + this.id + "  Nome Cliente: " + this.cliente.getNome() + "  Data: " + this.data.toString());
-        for (Produtos produtos : itensPedido) {
+        for (Produto produtos : itensPedido) {
             s.append("\n" + produtos);
         }
 
-        s.append(String.format("Valor Total: R$%.2f", this.getTotalPedido()));
+        s.append(String.format("Valor Total: R$%.2f - R$.2f (Desconto Fidelidade)", this.getTotalPedido(),
+                this.desconto));
 
         return s.toString();
     }

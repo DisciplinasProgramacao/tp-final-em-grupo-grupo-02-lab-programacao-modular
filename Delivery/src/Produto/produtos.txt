@@ -1,7 +1,0 @@
-1010;Pizza;25
-1020;Sanduiche;12
-2010;Prato Feito;15
-3010;Água;2
-3020;Suco;5
-3030;Refrigerante;5
-3040;Cerveja;8
